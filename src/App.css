@@ -541,4 +541,34 @@ h1 {
     gap: 15px;
     flex-direction: column;
   }
+  @media (max-width: 768px) {
+    .sidebar {
+      display: block !important;
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+  
+    .sidebar-nav {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 8px;
+    }
+  
+    .nav-item {
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+  
+    .app-container {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .main-content {
+      width: 100%;
+      padding: 20px 15px;
+    }
+  }
 }
