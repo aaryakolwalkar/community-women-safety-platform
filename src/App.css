@@ -570,5 +570,47 @@ h1 {
       width: 100%;
       padding: 20px 15px;
     }
+    @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+    
+      .app-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+    
+      .sidebar {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        padding: 15px;
+        overflow: hidden;
+      }
+    
+      .sidebar-nav {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        overflow: hidden;
+      }
+    
+      .nav-item {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: nowrap;
+        justify-content: center;
+      }
+    
+      .main-content {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        padding: 20px 15px;
+      }
+    }
   }
 }
