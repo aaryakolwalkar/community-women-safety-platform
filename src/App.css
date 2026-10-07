@@ -1,0 +1,544 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f5f7fb;
+  color: #171923;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 230px;
+  min-height: 100vh;
+  background: #111827;
+  color: white;
+  padding: 28px 18px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 21px;
+  font-weight: 700;
+  padding: 0 10px 35px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: #6366f1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-item {
+  padding: 13px 14px;
+  border-radius: 10px;
+  color: #9ca3af;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.nav-item.active {
+  background: #272f42;
+  color: white;
+}
+
+.nav-item:hover {
+  background: #20283a;
+  color: white;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 15px 10px;
+  color: #9ca3af;
+  border-top: 1px solid #273142;
+}
+
+.sidebar-bottom p {
+  font-size: 13px;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.sidebar-bottom small {
+  font-size: 11px;
+}
+
+/* Main */
+
+.main {
+  margin-left: 230px;
+  width: calc(100% - 230px);
+  padding: 35px 42px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.welcome {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+
+h1 {
+  font-size: 29px;
+  letter-spacing: -0.7px;
+}
+
+.add-btn {
+  border: none;
+  background: #6366f1;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 9px;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+}
+
+.add-btn:hover {
+  background: #5558df;
+}
+
+/* Cards */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #e8eaf0;
+  border-radius: 14px;
+  padding: 23px;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.03);
+}
+
+.card-label {
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.card h2 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.card-sub {
+  color: #8a91a0;
+  font-size: 12px;
+}
+
+.positive {
+  color: #16a34a;
+  font-size: 12px;
+}
+
+.negative {
+  color: #dc2626;
+  font-size: 12px;
+}
+
+.balance-card {
+  background: #6366f1;
+  color: white;
+  border: none;
+}
+
+.balance-card .card-label,
+.balance-card .card-sub {
+  color: #e0e7ff;
+}
+
+/* Panels */
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.panel {
+  background: white;
+  border: 1px solid #e8eaf0;
+  border-radius: 14px;
+  padding: 23px;
+  box-shadow: 0 2px 8px rgba(20, 30, 50, 0.03);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.panel h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.panel-header p {
+  color: #8a91a0;
+  font-size: 12px;
+}
+
+.period,
+.transaction-count {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 7px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+}
+
+/* Chart */
+
+.chart {
+  height: 180px;
+  margin-top: 25px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 45px;
+  border-bottom: 1px solid #edf0f4;
+  position: relative;
+}
+
+.chart-bar {
+  width: 75px;
+  border-radius: 9px 9px 0 0;
+  position: relative;
+  min-height: 35px;
+}
+
+.chart-bar span {
+  position: absolute;
+  top: -25px;
+  width: 100px;
+  left: -12px;
+  text-align: center;
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.income-bar {
+  height: 150px;
+  background: #6366f1;
+}
+
+.expense-bar {
+  height: 75px;
+  background: #f87171;
+}
+
+.chart-labels {
+  position: absolute;
+  bottom: -25px;
+  display: flex;
+  gap: 63px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* Budget */
+
+.budget-panel {
+  min-height: 270px;
+}
+
+.budget-percent {
+  font-size: 22px;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+.progress {
+  height: 10px;
+  background: #edf0f5;
+  border-radius: 20px;
+  margin-top: 45px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #6366f1;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.budget-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 13px;
+  color: #6b7280;
+  font-size: 11px;
+}
+
+/* Transactions */
+
+.transactions {
+  margin-bottom: 30px;
+}
+
+.transaction-list {
+  margin-top: 18px;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 13px 0;
+  border-top: 1px solid #eef0f4;
+}
+
+.transaction-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #f3f4ff;
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.transaction-details strong {
+  font-size: 13px;
+}
+
+.transaction-details span {
+  font-size: 11px;
+  color: #8a91a0;
+}
+
+.transaction-amount {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.transaction-amount.income {
+  color: #16a34a;
+}
+
+.transaction-amount.expense {
+  color: #dc2626;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  color: #a0a6b1;
+  font-size: 19px;
+  padding: 3px 7px;
+}
+
+.delete-btn:hover {
+  color: #dc2626;
+}
+
+/* Modal */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.modal {
+  width: 100%;
+  max-width: 430px;
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 23px;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.modal-header p {
+  color: #8a91a0;
+  font-size: 12px;
+}
+
+.modal-header button {
+  border: none;
+  background: #f3f4f6;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 7px;
+  color: #374151;
+}
+
+.modal input,
+.modal select {
+  border: 1px solid #dfe3ea;
+  border-radius: 8px;
+  padding: 11px;
+  margin-bottom: 16px;
+  outline: none;
+}
+
+.modal input:focus,
+.modal select:focus {
+  border-color: #6366f1;
+}
+
+.type-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.type-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #dfe3ea;
+  border-radius: 8px;
+  background: white;
+}
+
+.type-buttons button.selected {
+  background: #fff1f2;
+  color: #dc2626;
+  border-color: #fda4af;
+}
+
+.type-buttons button.selected.income-select {
+  background: #f0fdf4;
+  color: #16a34a;
+  border-color: #86efac;
+}
+
+.submit-btn {
+  border: none;
+  background: #6366f1;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 190px;
+  }
+
+  .main {
+    margin-left: 190px;
+    width: calc(100% - 190px);
+    padding: 25px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+    width: 100%;
+    padding: 20px;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+}
