@@ -1,553 +1,581 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
-const initialTransactions = [
-  { id: 1, title: "Freelance Project", category: "Income", amount: 15000, type: "income" },
-  { id: 2, title: "Rent", category: "Housing", amount: 12000, type: "expense" },
-  { id: 3, title: "Groceries", category: "Food", amount: 2450, type: "expense" },
-  { id: 4, title: "Internet Bill", category: "Bills", amount: 999, type: "expense" },
-];
-
 function App() {
-  const [page, setPage] = useState("Dashboard");
+  const [active, setActive] = useState("Home");
+  const [reportSent, setReportSent] = useState(false);
+  const [sosActive, setSosActive] = useState(false);
 
-  const [transactions, setTransactions] = useState(() => {
-    const saved = localStorage.getItem("fintrack-transactions");
-    return saved ? JSON.parse(saved) : initialTransactions;
-  });
+  const menu = [
+    "Home",
+    "Report Incident",
+    "Walking Buddy",
+    "Community",
+    "Emergency Contacts",
+  ];
 
-  const [showForm, setShowForm] = useState(false);
+  const reports = [
+    {
+      type: "Harassment",
+      location: "Andheri West",
+      status: "Under Review",
+      date: "08 Oct 2026",
+    },
+    {
+      type: "Unsafe Area",
+      location: "Bandra East",
+      status: "Resolved",
+      date: "06 Oct 2026",
+    },
+    {
+      type: "Stalking",
+      location: "Dadar",
+      status: "Under Review",
+      date: "04 Oct 2026",
+    },
+  ];
 
-  const [form, setForm] = useState({
-    title: "",
-    category: "Food",
-    amount: "",
-    type: "expense",
-  });
+  const buddies = [
+    {
+      name: "Ananya Sharma",
+      area: "Andheri",
+      distance: "1.2 km",
+      verified: true,
+    },
+    {
+      name: "Priya Mehta",
+      area: "Bandra",
+      distance: "2.4 km",
+      verified: true,
+    },
+    {
+      name: "Sneha Patil",
+      area: "Juhu",
+      distance: "3.1 km",
+      verified: true,
+    },
+  ];
 
-  useEffect(() => {
-    localStorage.setItem(
-      "fintrack-transactions",
-      JSON.stringify(transactions)
-    );
-  }, [transactions]);
+  const communities = [
+    {
+      name: "Andheri Women Safety Network",
+      members: 248,
+      description: "Local safety alerts and community support.",
+    },
+    {
+      name: "Mumbai Safe Walkers",
+      members: 516,
+      description: "Verified walking buddies across Mumbai.",
+    },
+    {
+      name: "Student Safety Community",
+      members: 182,
+      description: "Safety updates and support for students.",
+    },
+  ];
 
-  const income = transactions
-    .filter((t) => t.type === "income")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
-
-  const expenses = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((sum, t) => sum + Number(t.amount), 0);
-
-  const balance = income - expenses;
-
-  const formatMoney = (amount) =>
-    `₹${amount.toLocaleString("en-IN")}`;
-
-  const addTransaction = (e) => {
-    e.preventDefault();
-
-    if (!form.title || !form.amount) return;
-
-    const newTransaction = {
-      id: Date.now(),
-      title: form.title,
-      category: form.category,
-      amount: Number(form.amount),
-      type: form.type,
-    };
-
-    setTransactions([newTransaction, ...transactions]);
-
-    setForm({
-      title: "",
-      category: "Food",
-      amount: "",
-      type: "expense",
-    });
-
-    setShowForm(false);
-  };
-
-  const deleteTransaction = (id) => {
-    setTransactions(transactions.filter((t) => t.id !== id));
-  };
-
-  const categoryTotals = transactions
-    .filter((t) => t.type === "expense")
-    .reduce((acc, transaction) => {
-      acc[transaction.category] =
-        (acc[transaction.category] || 0) + Number(transaction.amount);
-      return acc;
-    }, {});
-
-  const maxCategoryAmount = Math.max(
-    ...Object.values(categoryTotals),
-    1
-  );
-
-  const renderDashboard = () => (
-    <>
-      <header className="topbar">
-        <div>
-          <p className="welcome">Welcome back 👋</p>
-          <h1>Financial Overview</h1>
-        </div>
-
-        <button className="add-btn" onClick={() => setShowForm(true)}>
-          + Add Transaction
-        </button>
-      </header>
-
-      <section className="cards">
-        <div className="card balance-card">
-          <div className="card-label">Total Balance</div>
-          <h2>{formatMoney(balance)}</h2>
-          <span className="card-sub">Available balance</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Total Income</div>
-          <h2>{formatMoney(income)}</h2>
-          <span className="positive">↗ Money received</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Total Expenses</div>
-          <h2>{formatMoney(expenses)}</h2>
-          <span className="negative">↘ Money spent</span>
-        </div>
-      </section>
-
-      <section className="content-grid">
-        <div className="panel">
-          <div className="panel-header">
+  const renderPage = () => {
+    if (active === "Report Incident") {
+      return (
+        <section className="page">
+          <div className="page-heading">
             <div>
-              <h3>Spending Overview</h3>
-              <p>Your current income and expenses</p>
-            </div>
-            <span className="period">This Month</span>
-          </div>
-
-          <div className="chart">
-            <div className="chart-bar income-bar">
-              <span>{formatMoney(income)}</span>
-            </div>
-
-            <div className="chart-bar expense-bar">
-              <span>{formatMoney(expenses)}</span>
-            </div>
-
-            <div className="chart-labels">
-              <span>Income</span>
-              <span>Expenses</span>
+              <span className="eyebrow">SAFETY REPORTING</span>
+              <h1>Report an Incident</h1>
+              <p>
+                Submit a harassment or safety incident anonymously.
+              </p>
             </div>
           </div>
-        </div>
 
-        <div className="panel budget-panel">
-          <div className="panel-header">
+          <div className="form-card">
+            {reportSent ? (
+              <div className="success-box">
+                <div className="success-icon">✓</div>
+                <h2>Report Submitted</h2>
+                <p>
+                  Your report has been submitted anonymously and will be
+                  reviewed by the safety team.
+                </p>
+                <button
+                  onClick={() => setReportSent(false)}
+                  className="secondary-btn"
+                >
+                  Submit Another Report
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="form-grid">
+                  <div className="field">
+                    <label>Incident Type</label>
+                    <select>
+                      <option>Harassment</option>
+                      <option>Stalking</option>
+                      <option>Unsafe Area</option>
+                      <option>Assault</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+
+                  <div className="field">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      placeholder="Enter incident location"
+                    />
+                  </div>
+                </div>
+
+                <div className="field">
+                  <label>Date & Time</label>
+                  <input type="datetime-local" />
+                </div>
+
+                <div className="field">
+                  <label>Describe the Incident</label>
+                  <textarea
+                    rows="6"
+                    placeholder="Describe what happened..."
+                  ></textarea>
+                </div>
+
+                <div className="anonymous-note">
+                  <span>🔒</span>
+                  <div>
+                    <strong>Your identity remains anonymous</strong>
+                    <p>
+                      Personal information is not displayed with the report.
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  className="primary-btn"
+                  onClick={() => setReportSent(true)}
+                >
+                  Submit Anonymous Report
+                </button>
+              </>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    if (active === "Walking Buddy") {
+      return (
+        <section className="page">
+          <div className="page-heading">
             <div>
-              <h3>Monthly Budget</h3>
-              <p>₹25,000 spending limit</p>
+              <span className="eyebrow">COMMUNITY SAFETY</span>
+              <h1>Find a Walking Buddy</h1>
+              <p>
+                Connect with verified volunteers in your area.
+              </p>
+            </div>
+          </div>
+
+          <div className="buddy-search">
+            <div>
+              <strong>Where are you walking?</strong>
+              <input placeholder="Enter starting location" />
             </div>
 
-            <span className="budget-percent">
-              {Math.min(Math.round((expenses / 25000) * 100), 100)}%
-            </span>
+            <div>
+              <strong>Destination</strong>
+              <input placeholder="Enter destination" />
+            </div>
+
+            <button className="primary-btn">Find Buddies</button>
           </div>
 
-          <div className="progress">
-            <div
-              className="progress-fill"
-              style={{
-                width: `${Math.min((expenses / 25000) * 100, 100)}%`,
-              }}
-            />
+          <h2 className="section-title">Verified Volunteers Near You</h2>
+
+          <div className="buddy-grid">
+            {buddies.map((buddy) => (
+              <div className="buddy-card" key={buddy.name}>
+                <div className="avatar">
+                  {buddy.name.charAt(0)}
+                </div>
+
+                <div className="buddy-info">
+                  <h3>{buddy.name}</h3>
+                  <p>{buddy.area}</p>
+
+                  {buddy.verified && (
+                    <span className="verified">✓ Verified Volunteer</span>
+                  )}
+
+                  <span className="distance">
+                    {buddy.distance} away
+                  </span>
+                </div>
+
+                <button className="outline-btn">Request Buddy</button>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    if (active === "Community") {
+      return (
+        <section className="page">
+          <div className="page-heading">
+            <div>
+              <span className="eyebrow">LOCAL NETWORK</span>
+              <h1>Safety Communities</h1>
+              <p>
+                Join verified neighbourhood groups and share safety updates.
+              </p>
+            </div>
+
+            <button className="primary-btn">+ Create Community</button>
           </div>
 
-          <div className="budget-info">
-            <span>Spent {formatMoney(expenses)}</span>
-            <span>
-              Remaining {formatMoney(Math.max(25000 - expenses, 0))}
-            </span>
+          <div className="community-grid">
+            {communities.map((community) => (
+              <div className="community-card" key={community.name}>
+                <div className="community-icon">🛡</div>
+                <h2>{community.name}</h2>
+                <p>{community.description}</p>
+
+                <div className="community-bottom">
+                  <span>{community.members} members</span>
+                  <button className="outline-btn">Join Group</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="community-feed">
+            <h2>Recent Community Alerts</h2>
+
+            <div className="alert-item">
+              <span className="alert-dot"></span>
+              <div>
+                <strong>Safety Alert — Andheri West</strong>
+                <p>
+                  Members reported suspicious activity near the station.
+                </p>
+              </div>
+              <small>15 min ago</small>
+            </div>
+
+            <div className="alert-item">
+              <span className="alert-dot"></span>
+              <div>
+                <strong>Safe Route Update</strong>
+                <p>
+                  Community members recommended an alternate route.
+                </p>
+              </div>
+              <small>1 hr ago</small>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (active === "Emergency Contacts") {
+      return (
+        <section className="page">
+          <div className="page-heading">
+            <div>
+              <span className="eyebrow">EMERGENCY SUPPORT</span>
+              <h1>Emergency Contacts</h1>
+              <p>
+                Keep trusted contacts ready for emergency situations.
+              </p>
+            </div>
+          </div>
+
+          <div className="emergency-layout">
+            <div className="sos-card">
+              <div className="sos-symbol">SOS</div>
+              <h2>Emergency Alert</h2>
+              <p>
+                Press the button to activate an emergency alert and share
+                your current location.
+              </p>
+
+              <button
+                className={`sos-btn ${sosActive ? "active" : ""}`}
+                onClick={() => setSosActive(!sosActive)}
+              >
+                {sosActive ? "SOS ACTIVE" : "ACTIVATE SOS"}
+              </button>
+
+              {sosActive && (
+                <div className="sos-status">
+                  ⚠ Emergency alert activated. Your trusted contacts
+                  have been notified.
+                </div>
+              )}
+            </div>
+
+            <div className="contacts-card">
+              <h2>Trusted Contacts</h2>
+
+              <div className="contact">
+                <div className="contact-avatar">M</div>
+                <div>
+                  <strong>Mom</strong>
+                  <p>Emergency Contact</p>
+                </div>
+                <button>Call</button>
+              </div>
+
+              <div className="contact">
+                <div className="contact-avatar">D</div>
+                <div>
+                  <strong>Dad</strong>
+                  <p>Emergency Contact</p>
+                </div>
+                <button>Call</button>
+              </div>
+
+              <button className="add-contact">
+                + Add Emergency Contact
+              </button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    return (
+      <section className="page">
+        <div className="hero">
+          <div className="hero-content">
+            <span className="eyebrow">COMMUNITY SAFETY PLATFORM</span>
+
+            <h1>
+              Safer communities,
+              <br />
+              <span>stronger together.</span>
+            </h1>
+
+            <p>
+              A community-driven platform that helps women report
+              harassment anonymously, find verified walking buddies,
+              connect with local communities and access emergency support.
+            </p>
+
+            <div className="hero-actions">
+              <button
+                className="primary-btn"
+                onClick={() => setActive("Walking Buddy")}
+              >
+                Find a Walking Buddy
+              </button>
+
+              <button
+                className="secondary-btn"
+                onClick={() => setActive("Report Incident")}
+              >
+                Report an Incident
+              </button>
+            </div>
+          </div>
+
+          <div className="hero-visual">
+            <div className="shield">🛡</div>
+            <div className="location-card">
+              <span className="live-dot"></span>
+              <div>
+                <strong>Community Protected</strong>
+                <p>Live safety network active</p>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section className="panel transactions">
-        <div className="panel-header">
+        <div className="stats">
           <div>
-            <h3>Recent Transactions</h3>
-            <p>Your latest financial activity</p>
+            <strong>1,240+</strong>
+            <span>Verified Volunteers</span>
           </div>
 
-          <span className="transaction-count">
-            {transactions.length} transactions
-          </span>
+          <div>
+            <strong>520+</strong>
+            <span>Safety Reports</span>
+          </div>
+
+          <div>
+            <strong>36</strong>
+            <span>Local Communities</span>
+          </div>
+
+          <div>
+            <strong>24/7</strong>
+            <span>Emergency Support</span>
+          </div>
         </div>
 
-        <TransactionList />
-      </section>
-    </>
-  );
+        <div className="home-grid">
+          <div className="feature-card">
+            <div className="feature-icon">🔒</div>
+            <h3>Anonymous Reporting</h3>
+            <p>
+              Report harassment and unsafe situations without revealing
+              your identity.
+            </p>
+            <button onClick={() => setActive("Report Incident")}>
+              Report Incident →
+            </button>
+          </div>
 
-  const TransactionList = () => (
-    <div className="transaction-list">
-      {transactions.length === 0 ? (
-        <p className="empty">No transactions yet.</p>
-      ) : (
-        transactions.map((transaction) => (
-          <div className="transaction" key={transaction.id}>
-            <div className="transaction-icon">
-              {transaction.type === "income" ? "↗" : "↘"}
-            </div>
+          <div className="feature-card">
+            <div className="feature-icon">🤝</div>
+            <h3>Walking Buddy</h3>
+            <p>
+              Find verified volunteers who can accompany you during
+              your commute.
+            </p>
+            <button onClick={() => setActive("Walking Buddy")}>
+              Find a Buddy →
+            </button>
+          </div>
 
-            <div className="transaction-details">
-              <strong>{transaction.title}</strong>
-              <span>{transaction.category}</span>
-            </div>
+          <div className="feature-card">
+            <div className="feature-icon">🌐</div>
+            <h3>Local Communities</h3>
+            <p>
+              Connect with women in your neighbourhood and share safety
+              alerts.
+            </p>
+            <button onClick={() => setActive("Community")}>
+              Explore Communities →
+            </button>
+          </div>
 
-            <div className={`transaction-amount ${transaction.type}`}>
-              {transaction.type === "income" ? "+" : "-"}
-              {formatMoney(transaction.amount)}
+          <div className="feature-card emergency-feature">
+            <div className="feature-icon">🚨</div>
+            <h3>SOS & Emergency</h3>
+            <p>
+              Quickly alert trusted contacts and share your location
+              during emergencies.
+            </p>
+            <button onClick={() => setActive("Emergency Contacts")}>
+              Emergency Support →
+            </button>
+          </div>
+        </div>
+
+        <div className="recent-section">
+          <div className="section-header">
+            <div>
+              <span className="eyebrow">SAFETY NETWORK</span>
+              <h2>Recent Reports</h2>
             </div>
 
             <button
-              className="delete-btn"
-              onClick={() => deleteTransaction(transaction.id)}
+              className="outline-btn"
+              onClick={() => setActive("Report Incident")}
             >
-              ×
+              Report Incident
             </button>
           </div>
-        ))
-      )}
-    </div>
-  );
 
-  const renderTransactions = () => (
-    <>
-      <header className="topbar">
-        <div>
-          <p className="welcome">Manage your money</p>
-          <h1>Transactions</h1>
-        </div>
-
-        <button className="add-btn" onClick={() => setShowForm(true)}>
-          + Add Transaction
-        </button>
-      </header>
-
-      <section className="cards">
-        <div className="card">
-          <div className="card-label">All Transactions</div>
-          <h2>{transactions.length}</h2>
-          <span className="card-sub">Recorded activities</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Income</div>
-          <h2>{formatMoney(income)}</h2>
-          <span className="positive">Total received</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Expenses</div>
-          <h2>{formatMoney(expenses)}</h2>
-          <span className="negative">Total spent</span>
-        </div>
-      </section>
-
-      <section className="panel transactions">
-        <div className="panel-header">
-          <div>
-            <h3>All Transactions</h3>
-            <p>View and manage your financial activity</p>
-          </div>
-        </div>
-
-        <TransactionList />
-      </section>
-    </>
-  );
-
-  const renderAnalytics = () => (
-    <>
-      <header className="topbar">
-        <div>
-          <p className="welcome">Understand your spending</p>
-          <h1>Analytics</h1>
-        </div>
-      </header>
-
-      <section className="cards">
-        <div className="card">
-          <div className="card-label">Total Spending</div>
-          <h2>{formatMoney(expenses)}</h2>
-          <span className="negative">Across all categories</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Average Transaction</div>
-          <h2>
-            {formatMoney(
-              expenses /
-                Math.max(
-                  transactions.filter((t) => t.type === "expense").length,
-                  1
-                )
-            )}
-          </h2>
-          <span className="card-sub">Average expense</span>
-        </div>
-
-        <div className="card">
-          <div className="card-label">Savings</div>
-          <h2>{formatMoney(Math.max(balance, 0))}</h2>
-          <span className="positive">Current savings</span>
-        </div>
-      </section>
-
-      <section className="panel">
-        <div className="panel-header">
-          <div>
-            <h3>Expense Breakdown</h3>
-            <p>Where your money is going</p>
-          </div>
-        </div>
-
-        <div className="analytics-list">
-          {Object.keys(categoryTotals).length === 0 ? (
-            <p className="empty">Add expenses to see analytics.</p>
-          ) : (
-            Object.entries(categoryTotals).map(([category, amount]) => (
-              <div className="analytics-row" key={category}>
-                <div className="analytics-name">
-                  <strong>{category}</strong>
-                  <span>{formatMoney(amount)}</span>
-                </div>
-
-                <div className="progress">
-                  <div
-                    className="progress-fill"
-                    style={{
-                      width: `${(amount / maxCategoryAmount) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      </section>
-    </>
-  );
-
-  const renderBudget = () => {
-    const budget = 25000;
-    const percentage = Math.min((expenses / budget) * 100, 100);
-    const remaining = Math.max(budget - expenses, 0);
-
-    return (
-      <>
-        <header className="topbar">
-          <div>
-            <p className="welcome">Plan your spending</p>
-            <h1>Budget</h1>
-          </div>
-        </header>
-
-        <section className="cards">
-          <div className="card balance-card">
-            <div className="card-label">Monthly Budget</div>
-            <h2>{formatMoney(budget)}</h2>
-            <span className="card-sub">Your spending limit</span>
-          </div>
-
-          <div className="card">
-            <div className="card-label">Amount Spent</div>
-            <h2>{formatMoney(expenses)}</h2>
-            <span className="negative">
-              {Math.round(percentage)}% used
-            </span>
-          </div>
-
-          <div className="card">
-            <div className="card-label">Remaining</div>
-            <h2>{formatMoney(remaining)}</h2>
-            <span className="positive">Available budget</span>
-          </div>
-        </section>
-
-        <section className="panel budget-panel">
-          <div className="panel-header">
-            <div>
-              <h3>Budget Progress</h3>
-              <p>Monthly spending limit</p>
+          <div className="report-table">
+            <div className="table-head">
+              <span>Incident</span>
+              <span>Location</span>
+              <span>Status</span>
+              <span>Date</span>
             </div>
 
-            <span className="budget-percent">
-              {Math.round(percentage)}%
-            </span>
+            {reports.map((report) => (
+              <div className="table-row" key={report.date}>
+                <strong>{report.type}</strong>
+                <span>{report.location}</span>
+                <span
+                  className={
+                    report.status === "Resolved"
+                      ? "status resolved"
+                      : "status review"
+                  }
+                >
+                  {report.status}
+                </span>
+                <span>{report.date}</span>
+              </div>
+            ))}
           </div>
-
-          <div className="progress">
-            <div
-              className="progress-fill"
-              style={{ width: `${percentage}%` }}
-            />
-          </div>
-
-          <div className="budget-info">
-            <span>Spent: {formatMoney(expenses)}</span>
-            <span>Remaining: {formatMoney(remaining)}</span>
-          </div>
-
-          <div className="budget-message">
-            {percentage >= 90
-              ? "⚠️ You are very close to your monthly budget."
-              : percentage >= 70
-              ? "⚠️ Keep an eye on your spending this month."
-              : "✓ Your spending is currently within a healthy range."}
-          </div>
-        </section>
-      </>
+        </div>
+      </section>
     );
   };
 
   return (
     <div className="app">
       <aside className="sidebar">
-        <div className="logo">
-          <div className="logo-icon">₹</div>
-          <span>FinTrack</span>
+        <div className="brand">
+          <div className="brand-icon">🛡</div>
+          <div>
+            <strong>SafeCircle</strong>
+            <span>Women Safety Network</span>
+          </div>
         </div>
 
         <nav>
-          {["Dashboard", "Transactions", "Analytics", "Budget"].map(
-            (item) => (
-              <div
-                key={item}
-                className={`nav-item ${page === item ? "active" : ""}`}
-                onClick={() => setPage(item)}
-              >
-                <span>
-                  {item === "Dashboard"
-                    ? "⌂"
-                    : item === "Transactions"
-                    ? "↕"
-                    : item === "Analytics"
-                    ? "◔"
-                    : "◫"}
-                </span>
-                <span>{item}</span>
-              </div>
-            )
-          )}
+          {menu.map((item) => (
+            <button
+              key={item}
+              className={active === item ? "nav-active" : ""}
+              onClick={() => setActive(item)}
+            >
+              <span>
+                {item === "Home" && "⌂"}
+                {item === "Report Incident" && "◉"}
+                {item === "Walking Buddy" && "♧"}
+                {item === "Community" && "◎"}
+                {item === "Emergency Contacts" && "!"}
+              </span>
+              {item}
+            </button>
+          ))}
         </nav>
 
         <div className="sidebar-bottom">
-          <p>Personal Finance</p>
-          <small>Track. Save. Grow.</small>
+          <div className="privacy">
+            <span>🔐</span>
+            <div>
+              <strong>Privacy First</strong>
+              <p>Your safety and privacy matter.</p>
+            </div>
+          </div>
+
+          <div className="profile">
+            <div className="profile-avatar">A</div>
+            <div>
+              <strong>Anonymous User</strong>
+              <span>Protected Account</span>
+            </div>
+          </div>
         </div>
       </aside>
 
-      <main className="main">
-        {page === "Dashboard" && renderDashboard()}
-        {page === "Transactions" && renderTransactions()}
-        {page === "Analytics" && renderAnalytics()}
-        {page === "Budget" && renderBudget()}
-      </main>
-
-      {showForm && (
-        <div className="modal-overlay" onClick={() => setShowForm(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <div>
-                <h2>Add Transaction</h2>
-                <p>Record your income or expense</p>
-              </div>
-
-              <button onClick={() => setShowForm(false)}>×</button>
-            </div>
-
-            <form onSubmit={addTransaction}>
-              <label>Transaction Name</label>
-
-              <input
-                type="text"
-                placeholder="e.g. Grocery Shopping"
-                value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
-              />
-
-              <label>Amount</label>
-
-              <input
-                type="number"
-                placeholder="Enter amount"
-                value={form.amount}
-                onChange={(e) =>
-                  setForm({ ...form, amount: e.target.value })
-                }
-              />
-
-              <label>Category</label>
-
-              <select
-                value={form.category}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value })
-                }
-              >
-                <option>Food</option>
-                <option>Housing</option>
-                <option>Bills</option>
-                <option>Transport</option>
-                <option>Shopping</option>
-                <option>Education</option>
-                <option>Entertainment</option>
-                <option>Other</option>
-              </select>
-
-              <label>Type</label>
-
-              <div className="type-buttons">
-                <button
-                  type="button"
-                  className={form.type === "expense" ? "selected" : ""}
-                  onClick={() =>
-                    setForm({ ...form, type: "expense" })
-                  }
-                >
-                  Expense
-                </button>
-
-                <button
-                  type="button"
-                  className={
-                    form.type === "income"
-                      ? "selected income-select"
-                      : ""
-                  }
-                  onClick={() =>
-                    setForm({ ...form, type: "income" })
-                  }
-                >
-                  Income
-                </button>
-              </div>
-
-              <button className="submit-btn" type="submit">
-                Add Transaction
-              </button>
-            </form>
+      <main>
+        <header className="topbar">
+          <div>
+            <span className="mobile-brand">SafeCircle</span>
           </div>
-        </div>
-      )}
+
+          <div className="top-actions">
+            <span className="location">
+              📍 Mumbai, India
+            </span>
+
+            <button className="notification">🔔</button>
+          </div>
+        </header>
+
+        {renderPage()}
+      </main>
     </div>
   );
 }
